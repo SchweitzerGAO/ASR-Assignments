@@ -5,3 +5,5 @@
 5. 加窗+DFT
 6. Mel Filter
 7. DCT以及MFCC动态特征提取
+
+Document is available at https://github.com/SchweitzerGAO/ASR-Assignments

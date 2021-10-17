@@ -9,6 +9,10 @@ import librosa
 # the functions below are mainly referenced:
 # reference: https://blog.csdn.net/Magical_Bubble/article/details/90295814
 
+# Got answers of some questions in:
+# http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
+# and
+# https://github.com/jameslyons/python_speech_features
 
 # time-domain diagrams
 def plot_time(data, sample_rate):
@@ -288,5 +292,6 @@ if __name__ == '__main__':
     norm_model = norm(mfcc_with_delta2)  # normalize the data
 
     '''
+    2021/10/17
     Feature extracting completed! Congratulations to myself!
     '''
