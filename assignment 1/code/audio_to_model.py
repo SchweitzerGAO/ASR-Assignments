@@ -284,7 +284,7 @@ if __name__ == '__main__':
     mel_data, energy = mel_filter(fft_data)  # mel filters(outputs log mel-filter)
     dct_data = dct(mel_data)  # DCT transform
     liftered_data = lifter(dct_data)  # lifter DCT
-    liftered_data = np.insert(liftered_data, 0, values=energy, axis=1)  # add the energy dimension
+    liftered_data = np.insert(liftered_data, 0, values=np.log10(energy), axis=1)  # add the energy dimension
     delta_data = delta(liftered_data)  # first delta
     delta_square = delta(delta_data.T)  # second delta
     mfcc_with_delta1 = np.insert(liftered_data, len(liftered_data[0]), values=delta_data, axis=1)  # append first delta
@@ -294,4 +294,6 @@ if __name__ == '__main__':
     '''
     2021/10/17
     Feature extracting completed! Congratulations to myself!
+    2021/10/19
+    shall insert log10(energy) to the liftered data
     '''
