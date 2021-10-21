@@ -44,6 +44,8 @@ delta(): calculate the delta of the data (twice to calculate the 2-rank delta)
 norm(): normalize the data to get the final model
 ```
 
+
+
 **References:**
 
 1. https://blog.csdn.net/weixin_45272908/article/details/115641702
@@ -51,3 +53,7 @@ norm(): normalize the data to get the final model
 3. http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/
 4. https://github.com/jameslyons/python_speech_features
 5. https://blog.csdn.net/jojozhangju/article/details/18678861
+
+**Note**
+
+To generate diagrams simply run the code on PyCharm
