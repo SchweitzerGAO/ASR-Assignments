@@ -57,3 +57,7 @@ norm(): normalize the data to get the final model
 **Note**
 
 To generate diagrams simply run the code on PyCharm
+
+## Assignment 2: Implementation HMM Training
+
+This assignment is to implement a HMM Training code in Python. Actually we need to "translate" code in MATLAB to Python
