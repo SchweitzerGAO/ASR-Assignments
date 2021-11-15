@@ -3,36 +3,21 @@
 import numpy as np
 
 # Viterbi Alg in ASR translated from MATLAB code by Min-Lee Lee and Hoang-Hiep Le
-
-# Gaussian-log function
-
-def log_Gaussian(mean_i, var_i, o_i):
-    dim = np.max(var_i.shape)
-    return (-1 / 2) * (
-            dim * np.log(2 * np.pi) + np.sum(np.log(var_i)) + np.sum((o_i - mean_i) * (o_i - mean_i) / var_i))
+# repo: https://github.com/hhle88/HMM
 
 
-def my_log(x):
-    if x == 0:
-        return -np.inf
-    else:
-        return np.log(x)
+from util.util import log_Gaussian, my_log,parse
 
 
-def parse(array, value):
-    temp = []
-    for item in array:
-        temp.append(item)
-    temp.append(value)
-    return temp
+
 
 
 # default parameter values for Viterbi Alg
 
-# ?
+# mean
 default_mean = np.array([[10., 0., 0.],
                          [5., 2., 9.]])
-# ?
+# variance
 default_var = np.array([[1., 1., 1.],
                         [1., 1., 1.]])
 
@@ -46,7 +31,7 @@ A = np.array([[0., 1., 0., 0., 0.],
               [0., 0., 0., 0.5, 0.5],
               [0., 0., 0., 0., 1.]])
 
-# emission matrix?
+# emission matrix
 # concatenate 2-D array to 3-D
 default_aij = np.array([A, np.dot(A, A), np.dot(np.dot(A, A), A)])  # for loss frame case
 
@@ -54,11 +39,11 @@ default_aij = np.array([A, np.dot(A, A), np.dot(np.dot(A, A), A)])  # for loss f
 def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs):
     """
     the viterbi algorithm in Python
-    :param mean:
-    :param var:
-    :param aij:
-    :param obs:
-    :return:
+    :param mean: 均值
+    :param var: 方差
+    :param aij: 发射矩阵的[i,j]元素
+    :param obs: 观察矩阵
+    :return: 最优预测结果
     """
     dim, t_len = obs.shape
     nan_array = np.full((dim, 1), np.nan)
@@ -86,7 +71,7 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
     #         s_chain[i, j] = np.zeros((1, 2), dtype=object)
 
     # at t = 0
-    dt = timing[0]-1
+    dt = timing[0] - 1
     for j in range(1, m_len - 1):
         # if aij[dt, 0, j] == 0:
         #     fjt[j, 0] = -np.inf
@@ -94,11 +79,11 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
         #     fjt[j, 0] = np.log(aij[dt, 0, j])
         fjt[j, 0] = my_log(aij[dt, 0, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, 0])
         if fjt[j, 0] > -np.inf:
-            s_chain[j, 0] = np.array([1, j+1])
+            s_chain[j, 0] = np.array([1, j + 1])
 
     # at t in range(1,t_len)
     for t in range(1, t_len):
-        dt = timing[t] - timing[t - 1]-1
+        dt = timing[t] - timing[t - 1] - 1
         for j in range(1, m_len - 1):
             f_max = -np.inf
             i_max = -1
@@ -107,9 +92,9 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
             # loop in MATLAB:
             '''
                  for i=2:j  -> [2,j] note that j is equivalent to j-1 in python in terms of index
-                 for 
+                 and the nested loop is corresponded with the outer loop
             '''
-            for i in range(1, j+1):
+            for i in range(1, j + 1):
                 if fjt[i, t - 1] > -np.inf:
                     f = fjt[i, t - 1] + my_log(aij[dt, i, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, t])
                 if f > f_max:
@@ -117,7 +102,7 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
                     i_max = i
             if i_max != -1:
                 # s_chain[j, t] = np.array([s_chain[i_max, t - 1], j])
-                s_chain[j, t] = np.array(parse(s_chain[i_max, t - 1], j+1))
+                s_chain[j, t] = np.array(parse(s_chain[i_max, t - 1], j + 1))
                 fjt[j, t] = f_max
 
     # at t = timing.len-1
