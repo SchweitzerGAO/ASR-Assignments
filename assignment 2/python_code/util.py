@@ -1,6 +1,13 @@
 import numpy as np
 
 
+class HMM:
+    def __init__(self):
+        self.mean = None
+        self.var = None
+        self.aij = None
+
+
 # Gaussian-log function
 def log_Gaussian(mean_i, var_i, o_i):
     dim = np.max(var_i.shape)
@@ -56,3 +63,4 @@ def sum_exp(y, y_max, len_x):
             else:
                 ret += np.exp(y[i] - y_max)
         return y_max + my_log(ret)
+

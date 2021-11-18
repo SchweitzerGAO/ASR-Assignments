@@ -1,5 +1,4 @@
-import numpy as np
-from util.util import *
+from util import *
 
 
 def EM_HMM(mean, var, aij, obs):

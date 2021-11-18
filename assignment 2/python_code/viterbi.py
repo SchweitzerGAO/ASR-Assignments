@@ -6,7 +6,7 @@ import numpy as np
 # repo: https://github.com/hhle88/HMM
 
 
-from util.util import log_Gaussian, my_log,parse
+from util import log_Gaussian, my_log,parse
 
 
 
