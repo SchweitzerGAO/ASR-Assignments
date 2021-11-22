@@ -1,8 +1,7 @@
-from audio_to_model import my_mfcc
-import pickle as pkl
 import os
+import pickle as pkl
 
-import numpy
+from audio_to_model import my_mfcc
 
 
 # mfcc using librosa API

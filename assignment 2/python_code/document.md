@@ -95,7 +95,7 @@ The predicate algorithm is mainly Viterbi Alg and the brief process is as below:
 
 in this code, step 3 is useless because we don't need to know the chain of optimization. Just the final optimized value is enough
 
-## IV. Run the code
+## IV. Test the code
 
 Because it is so slow for the PC without GPU so I just tested the case with the number of state is 12.
 
@@ -110,3 +110,16 @@ Because it is so slow for the PC without GPU so I just tested the case with the 
 It is somehow bit of lower(97.24%) than the MATLAB code.
 
 I am more than happy to train my own ASR model by translating the  code. At least I have some experience in AI coding
+
+## Appendix
+
+### How to run
+
+1. run the `wav2mfcc.py`. script to get the MFCC feature
+2. make a directory named `csvfiles` in the root directory of your project
+3. run `generate_*_list.py`(2 scripts should both be run) to generate file sheets
+4. run `main.py` to do the ASR jobs
+
+### Pre-requisites
+
+numpy & pickle
