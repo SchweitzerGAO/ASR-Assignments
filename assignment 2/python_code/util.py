@@ -11,15 +11,12 @@ class HMM:
 # Gaussian-log function
 def log_Gaussian(mean_i, var_i, o_i):
     dim = np.max(var_i.shape)
-    return (-1 / 2) * (
-            dim * np.log(2 * np.pi) + np.sum(np.log(var_i)) + np.sum((o_i - mean_i) * (o_i - mean_i) / var_i))
+    ret = (-1 / 2) * (dim * np.log(2 * np.pi) + np.sum(np.log(var_i)) + np.sum((o_i - mean_i) * (o_i - mean_i) / var_i))
+    return ret
 
 
 def my_log(x):
-    if x == 0:
-        return -np.inf
-    else:
-        return np.log(x)
+    return np.log(x)
 
 
 def parse(array, value):
@@ -32,7 +29,7 @@ def parse(array, value):
 
 def log_sum_alpha(log_alpha_t, aij_j):
     len_x = log_alpha_t.shape[0]
-    y = np.full((1, len_x), -np.inf)
+    y = np.full(len_x, -np.inf)
     y_max = -np.inf
     for i in range(0, len_x):
         y[i] = log_alpha_t[i] + my_log(aij_j[i])
@@ -43,7 +40,7 @@ def log_sum_alpha(log_alpha_t, aij_j):
 
 def log_sum_beta(aij_i, mean, var, obs, log_beta_t):
     len_x = mean.shape[1]
-    y = np.full((1, len_x), -np.inf)
+    y = np.full(len_x, -np.inf)
     y_max = -np.inf
     for j in range(0, len_x):
         y[j] = my_log(aij_i[j]) + log_Gaussian(mean[:, j], var[:, j], obs) + log_beta_t[j]

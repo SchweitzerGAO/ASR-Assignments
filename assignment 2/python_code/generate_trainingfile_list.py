@@ -19,7 +19,7 @@ def generate_trainingfile_list():
                     label = int(label)
                 row = [label, dirpath + '/' + file]
                 with open('./csvfiles/training.csv', 'a') as f:
-                    writer = csv.writer(f)
+                    writer = csv.writer(f, lineterminator='\n')
                     writer.writerow(row)
 
 

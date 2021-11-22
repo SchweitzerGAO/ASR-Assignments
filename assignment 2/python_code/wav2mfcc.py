@@ -1,6 +1,8 @@
-import librosa
+from audio_to_model import my_mfcc
 import pickle as pkl
 import os
+
+import numpy
 
 
 # mfcc using librosa API
@@ -18,7 +20,7 @@ def mfcc_extract():
         os.mkdir('./mfcc/' + key[-2:])
         for file in value:
             # extracting the mfcc
-            wav_signal, fs = librosa.load('./wav/' + key[-2:] + '/' + file)
+            file_path = './wav/' + key[-2:] + '/' + file
             label = file[0]
             if label == 'O':
                 label = 10
@@ -26,7 +28,7 @@ def mfcc_extract():
                 label = 11
             else:
                 label = int(label)
-            feature = librosa.feature.mfcc(wav_signal, sr=fs)
+            feature = my_mfcc(file_path)
             temp = {label: feature}
 
             # write into the pkl file
@@ -37,3 +39,4 @@ def mfcc_extract():
 
 if __name__ == '__main__':
     mfcc_extract()
+    print("Done")

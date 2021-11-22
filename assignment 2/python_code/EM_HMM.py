@@ -19,6 +19,8 @@ def EM_HMM(mean, var, aij, obs):
     var = np.concatenate((nan_array, var), 1)
     var = np.concatenate((var, nan_array), 1)
 
+    shape_aij = aij.shape
+    aij[shape_aij[0] - 1][shape_aij[1] - 1] = 1
     N = mean.shape[1]
 
     # Step 1: calculate alpha
@@ -37,25 +39,22 @@ def EM_HMM(mean, var, aij, obs):
     log_beta[:, T - 1] = my_log(aij[:, N - 1])
     for t in range(T - 2, -1, -1):
         for i in range(1, N - 1):
-            log_beta[i, t] = log_sum_beta(aij[0, 1:N - 1], mean[:, 1:N - 1], var[:, 1:N - 1], obs[:, t + 1],
+            log_beta[i, t] = log_sum_beta(aij[i, 1:N - 1], mean[:, 1:N - 1], var[:, 1:N - 1], obs[:, t + 1],
                                           log_beta[1:N - 1, t + 1])
-    log_beta[N - 1, 0] = log_sum_beta(aij[1, 2:N - 1], mean[:, 2:N - 1], var[:, 2:N - 1], obs[:, 1],
-                                      log_beta[2:N - 1, 1])
+    log_beta[N - 1, 0] = log_sum_beta(aij[0, 1:N - 1], mean[:, 1:N - 1], var[:, 1:N - 1], obs[:, 0],
+                                      log_beta[1:N - 1, 0])
 
     # Step 3: calculate Xi
     # t < T-1
-    log_Xi = log_beta = np.full((T, N, N), -np.inf)
+    log_Xi = np.full((T, N, N), -np.inf)
     for t in range(0, T - 1):
         for j in range(1, N - 1):
             for i in range(1, N - 1):
-                log_Xi[t, i, j] = log_alpha[i, t] + my_log(aij(i, j)) + \
-                                  log_Gaussian(mean[:, j], var[:, j], obs[:, t + 1]) + \
-                                  log_beta[j, t + 1] - \
-                                  log_alpha[N - 1, T]
+                log_Xi[t, i, j] = log_alpha[i, t] + my_log(aij[i, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, t + 1]) + log_beta[j, t + 1] - log_alpha[N - 1, T]
 
     # t == T-1
     for i in range(0, N):
-        log_Xi[T, i, N] = log_alpha[i, T] + my_log(aij[i, N]) - log_alpha[N - 1, T]
+        log_Xi[T-1, i, N-1] = log_alpha[i, T-1] + my_log(aij[i, N-1]) - log_alpha[N - 1, T]
 
     # Step 4: calculate gamma
     log_gamma = np.full((N, T), -np.inf)
@@ -67,10 +66,10 @@ def EM_HMM(mean, var, aij, obs):
     # Step 5: calculate numerators, denominator and likelihood
 
     # initialization
-    mean_numerator = np.full((dim, N), 0)
-    var_numerator = np.full((dim, N), 0)
-    aij_numerator = np.full((N, N), 0)
-    denominator = np.full((N, 1), 0)
+    mean_numerator = np.full((dim, N), 0.)
+    var_numerator = np.full((dim, N), 0.)
+    aij_numerator = np.full((N, N), 0.)
+    denominator = np.full((N, 1), 0.)
 
     # mean&var numerator and denominator
     for j in range(1, N - 1):

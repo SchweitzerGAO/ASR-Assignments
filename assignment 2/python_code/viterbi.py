@@ -48,18 +48,16 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
     dim, t_len = obs.shape
     nan_array = np.full((dim, 1), np.nan)
 
-    # ?
+    # initialize the table
     mean = np.concatenate((nan_array, mean), 1)
     mean = np.concatenate((mean, nan_array), 1)
 
     var = np.concatenate((nan_array, var), 1)
     var = np.concatenate((var, nan_array), 1)
 
-    # ?
-    # shape_aij = aij.shape
-    # aij[shape_aij[0] - 1][shape_aij[1] - 1] = 1
+    shape_aij = aij.shape
+    aij[shape_aij[0] - 1][shape_aij[1] - 1] = 1
 
-    # ?
     timing = np.array([i for i in range(1, t_len + 2)])
     m_len = mean.shape[1]
     fjt = np.full((m_len, t_len), -np.inf)
@@ -77,7 +75,7 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
         #     fjt[j, 0] = -np.inf
         # else:
         #     fjt[j, 0] = np.log(aij[dt, 0, j])
-        fjt[j, 0] = my_log(aij[dt, 0, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, 0])
+        fjt[j, 0] = my_log(aij[0, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, 0])
         if fjt[j, 0] > -np.inf:
             s_chain[j, 0] = np.array([1, j + 1])
 
@@ -96,7 +94,7 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
             '''
             for i in range(1, j + 1):
                 if fjt[i, t - 1] > -np.inf:
-                    f = fjt[i, t - 1] + my_log(aij[dt, i, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, t])
+                    f = fjt[i, t - 1] + my_log(aij[i, j]) + log_Gaussian(mean[:, j], var[:, j], obs[:, t])
                 if f > f_max:
                     f_max = f
                     i_max = i
@@ -115,7 +113,7 @@ def viterbi(mean=default_mean, var=default_var, aij=default_aij, obs=default_obs
         #     f = -np.inf
         # else:
         #     f = np.log(aij[dt, 0, m_len - 1])
-        f = my_log(aij[dt, i, m_len - 1]) + fjt[i, t_len - 1]
+        f = my_log(aij[i, m_len - 1]) + fjt[i, t_len - 1]
         if f > f_opt:
             f_opt = f
             i_opt = i
