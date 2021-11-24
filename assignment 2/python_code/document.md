@@ -113,13 +113,17 @@ I am more than happy to train my own ASR model by translating the  code. At leas
 
 ## Appendix
 
-### How to run
+### 1. How to run
 
 1. run the `wav2mfcc.py`. script to get the MFCC feature
-2. make a directory named `csvfiles` in the root directory of your project
-3. run `generate_*_list.py`(2 scripts should both be run) to generate file sheets
+2. create a directory named `csvfiles` in the root directory of your project(storing the file lists)
+3. create a directory named `HMM_model` in the root directory of your project(storing the HMM model)
+4. run `wav2mfcc` to generate mfcc(.pkl) files
+5. run `generate_*_list.py`(2 scripts should both be run) to generate file sheets
 4. run `main.py` to do the ASR jobs
 
-### Pre-requisites
+### 2. Pre-requisites
 
-numpy & pickle
+numpy  
+
+pickle
